@@ -46,6 +46,13 @@ def blit_rotate_pivot(surf, image, pivot, angle):
 
     surf.blit(rotated_image, new_rect.topleft)
 
+
+def blit_rotate_center(surf, image, pivot, angle):
+    rotated_image = pg.trasnform.rotate(image, angle)
+    new_rect = rotated_image.get_rect(center=image.rect.center)
+
+    surf.blit(rotated_image, new_rect)
+
 bottom_x, bottom_y = 100, 100
 
 
@@ -67,15 +74,15 @@ def rotate_point(point, center, angle):
 
 
 
-main_image = pg.image.load("mickeyclock.jpeg")
+main_image = pg.image.load("clock.png")
 main_image = main_image.convert()
 main_image, main_image_size = scale(main_image)
 
-short_hand = pg.image.load("shorthand.png")
+short_hand = pg.image.load("min_hand_rot.png")
 short_hand, short_hand_size = scale(short_hand, 0.7)
 short_hand_center = center_on_screen(short_hand, offset=[5, -50])
 
-long_hand = pg.image.load("longhand.png")
+long_hand = pg.image.load("sec_hand_rot.png")
 long_hand, long_hand_size = scale(long_hand, 0.7)
 long_hand_center = center_on_screen(long_hand, offset=[20, -10])
 
@@ -95,8 +102,13 @@ while running:
     mins_angle = local_time.tm_min * 6
     secs_angle = local_time.tm_sec * 6
 
-    blit_rotate_pivot(screen, long_hand,  screen.get_rect().center, -secs_angle)
-    blit_rotate_pivot(screen, short_hand, screen.get_rect().center, -mins_angle)
+    # blit_rotate_pivot(screen, long_hand,  screen.get_rect().center, -secs_angle)
+    # blit_rotate_center(screen, long_hand, screen.get_rect().center, -secs_angle)
+    # screen.blit(long_hand, long_hand_center)
+    screen.blit(*rot_center(long_hand, -secs_angle, *screen.get_rect().center))
+    screen.blit(*rot_center(short_hand, -mins_angle, *screen.get_rect().center))
+    # screen.blit(*rot_center(long_hand, -secs_angle, *long_hand_center))
+    # blit_rotate_pivot(screen, short_hand, screen.get_rect().center, -mins_angle)
 
     clock.tick(60)
 
